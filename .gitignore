@@ -1,0 +1,9 @@
+/.vs
+/Intermediate
+/Saved
+/Build
+/Plugins
+/UnrealTut.sln
+Binaries/
+*.sin
+*_BuiltData.uasset
