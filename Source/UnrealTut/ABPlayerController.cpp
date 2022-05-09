@@ -14,3 +14,22 @@ void AABPlayerController::OnPossess(APawn* aPawn)
 	ABLOG_S(Warning);
 	Super::OnPossess(aPawn);
 }
+
+//void AABPlayerController::SetupInputComponent()
+//{
+//	Super::SetupInputComponent();
+//	InputComponent->BindAxis(TEXT("LeftRight"), this, &AABPlayerController::LeftRight);
+//}
+
+void AABPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	FInputModeGameOnly InputMode;
+	SetInputMode(InputMode);
+}
+
+//void AABPlayerController::LeftRight(float NewAxisValue)
+//{
+//	//Do Nothing.
+//}
