@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "UnrealTut.h"
 #include "GameFramework/Actor.h"
 #include "Fountain.generated.h"
 
@@ -18,9 +18,24 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void PostInitializeComponents() override;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* Body;
+
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* Water;
+
+	UPROPERTY(VisibleAnywhere)
+	UPointLightComponent *Light;
+
+	UPROPERTY(VisibleAnywhere)
+	UParticleSystemComponent *Splash;
+
+	UPROPERTY(EditAnywhere, Category=ID)
+	int32 ID;
 };
