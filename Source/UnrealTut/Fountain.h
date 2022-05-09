@@ -3,6 +3,7 @@
 #pragma once
 
 #include "UnrealTut.h"
+#include "GameFramework/RotatingMovementComponent.h"
 #include "GameFramework/Actor.h"
 #include "Fountain.generated.h"
 
@@ -38,4 +39,11 @@ public:
 
 	UPROPERTY(EditAnywhere, Category=ID)
 	int32 ID;
+
+	UPROPERTY(VisibleAnywhere)
+	URotatingMovementComponent* Movement;
+
+private:
+	UPROPERTY(EditAnywhere, Category=Stat,Meta = (AllowPrivateAccess = true))
+	float RotateSpeed;
 };
