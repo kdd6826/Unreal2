@@ -28,6 +28,12 @@ protected:
 	void SetControlMode(EControlMode NewControlMode);
 	EControlMode CurrentControlMode = EControlMode::GTA;
 	FVector DirectionToMove = FVector::ZeroVector;
+
+	float ArmLengthTo = 0.f;
+	FRotator ArmRotationTo = FRotator::ZeroRotator;
+	float ArmLengthSpeed = 0.f;
+	float ArmRotationSpeed = 0.f;
+
 	void SetControlMode(int32 ControlMode);
 public:	
 	// Called every frame
@@ -47,4 +53,6 @@ private:
 	void LeftRight(float NewAxisValue);
 	void LookUp(float NewAxisValue);
 	void Turn(float NewAxisValue);
+
+	void ViewChange();
 };
