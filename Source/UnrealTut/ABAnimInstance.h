@@ -16,7 +16,18 @@ class UNREALTUT_API UABAnimInstance : public UAnimInstance
 	
 public:
 	UABAnimInstance();
+	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+
+	void PlayAttackMontage();
+
+	void SetPawnSpeed(float NewPawnSpeed) { CurrentPawnSpeed = NewPawnSpeed; }
 private:
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category=Pawn, Meta=(AllowPrivateAccess=true))
 	float CurrentPawnSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
+	bool isInAir;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+	UAnimMontage* AttackMontage;
 };

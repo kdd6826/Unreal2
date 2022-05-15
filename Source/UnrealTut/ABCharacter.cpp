@@ -2,7 +2,7 @@
 
 
 #include "ABCharacter.h"
-
+#include "ABAnimInstance.h"
 // Sets default values
 AABCharacter::AABCharacter()
 {
@@ -26,16 +26,18 @@ AABCharacter::AABCharacter()
 	}
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 
+	
 	static ConstructorHelpers::FClassFinder<UAnimInstance> WARRIOR_ANIM(TEXT("/Game/Book/Animations/WarriorAnimBlueprint.WarriorAnimBlueprint_C"));
 	if (WARRIOR_ANIM.Succeeded())
 	{
 		GetMesh()->SetAnimInstanceClass(WARRIOR_ANIM.Class);
 	}
+
+	SetControlMode(EControlMode::DIABLO);
 		
 	ArmLengthSpeed = 3.f;
 	ArmRotationSpeed = 10.f;
-
-	SetControlMode(EControlMode::DIABLO);
+	GetCharacterMovement()->JumpZVelocity = 800.f;
 }
 
 // Called when the game starts or when spawned
@@ -134,6 +136,11 @@ void AABCharacter::Tick(float DeltaTime)
 	default:
 		break;
 	}
+	auto ABAnimInstance = Cast<UABAnimInstance>(GetMesh()->GetAnimInstance());
+	if (nullptr != ABAnimInstance)
+	{
+		ABAnimInstance->SetPawnSpeed(GetVelocity().Size());
+	}
 }
 
 // Called to bind functionality to input
@@ -143,6 +150,10 @@ void AABCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	PlayerInputComponent->BindAction(TEXT("ViewChange"), EInputEvent::IE_Pressed, this,
 		&AABCharacter::ViewChange);
+	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this,
+		&ACharacter::Jump);
+	PlayerInputComponent->BindAction(TEXT("Attack"), EInputEvent::IE_Pressed,
+		this, &AABCharacter::Attack);
 
 	PlayerInputComponent->BindAxis(TEXT("UpDown"), this, &AABCharacter::UpDown);
 	PlayerInputComponent->BindAxis(TEXT("LeftRight"), this, &AABCharacter::LeftRight);
@@ -218,5 +229,13 @@ void AABCharacter::ViewChange()
 	default:
 		break;
 	}
+}
+
+void AABCharacter::Attack()
+{
+	auto AnimInstance = Cast<UABAnimInstance>(GetMesh()->GetAnimInstance());
+	if (nullptr == AnimInstance) return;
+
+	AnimInstance->PlayAttackMontage();
 }
 
