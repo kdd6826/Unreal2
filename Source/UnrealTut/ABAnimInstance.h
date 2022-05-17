@@ -6,9 +6,9 @@
 #include "Animation/AnimInstance.h"
 #include "ABAnimInstance.generated.h"
 
-/**
- * 
- */
+DECLARE_MULTICAST_DELEGATE(FonNextAttackCheckDelegate);
+DECLARE_MULTICAST_DELEGATE(FOnAttackHitCheckDelegate);
+
 UCLASS()
 class UNREALTUT_API UABAnimInstance : public UAnimInstance
 {
@@ -19,8 +19,21 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 	void PlayAttackMontage();
+	void JumpToAtttackMontageSection(int32 NewSection);
 
 	void SetPawnSpeed(float NewPawnSpeed) { CurrentPawnSpeed = NewPawnSpeed; }
+public:
+	FonNextAttackCheckDelegate OnNextAttackCheck;
+	FOnAttackHitCheckDelegate OnAttackHitCheck;
+private:
+	UFUNCTION()
+	void AnimNotify_AttackHitCheck();
+
+	UFUNCTION()
+	void AnimNotify_NextAttackCheck();
+
+	FName GetAttackMontageSectionName(int32 Section);
+
 private:
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category=Pawn, Meta=(AllowPrivateAccess=true))
 	float CurrentPawnSpeed;
