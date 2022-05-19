@@ -4,6 +4,7 @@
 #include "ABCharacter.h"
 #include "ABAnimInstance.h"
 #include "ABWeapon.h"
+#include "ABCharacterStatComponent.h"
 #include "DrawDebugHelpers.h"
 // Sets default values
 AABCharacter::AABCharacter()
@@ -15,6 +16,7 @@ AABCharacter::AABCharacter()
 
 	SpringArm->SetupAttachment(GetCapsuleComponent());
 	Camera->SetupAttachment(SpringArm);
+	CharacterStat = CreateDefaultSubobject<UABCharacterStatComponent>(TEXT("CHARACTERSTAT"));
 
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -88.f),
 		FRotator(0.f, -90.f, 0.f));
