@@ -227,6 +227,23 @@ void AABCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAxis(TEXT("Turn"), this, &AABCharacter::Turn);
 }
 
+bool AABCharacter::CanSetWeapon()
+{
+	return (nullptr == CurrentWeapon);
+}
+
+void AABCharacter::SetWeapon(AABWeapon* NewWeapon)
+{
+	ABCHECK(nullptr != NewWeapon && nullptr == CurrentWeapon);
+	FName WeaponSocket(TEXT("hand_rSocket"));
+	if (nullptr != NewWeapon)
+	{
+		NewWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocket);
+		NewWeapon->SetOwner(this);
+		CurrentWeapon = NewWeapon;
+	}
+}
+
 void AABCharacter::UpDown(float NewAxisValue)
 {
 	switch (CurrentControlMode)
