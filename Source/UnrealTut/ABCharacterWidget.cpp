@@ -12,13 +12,13 @@ void UABCharacterWidget::BindCharacterStat(UABCharacterStatComponent* NewCharact
 
 	CurrentCharacterStat = NewCharacterStat;
 	NewCharacterStat->OnHPChanged.AddUObject(this, &UABCharacterWidget::UpdateHPWidget);
-	NewCharacterStat->OnHPChanged.AddLambda([this]()->void {
-		if (CurrentCharacterStat.IsValid())
-		{
-			ABLOG(Warning, TEXT("HPRatio : %f"), CurrentCharacterStat->GetHPRatio());
-		}
+	//NewCharacterStat->OnHPChanged.AddLambda([this]()->void {
+	//	if (CurrentCharacterStat.IsValid())
+	//	{
+	//		ABLOG(Warning, TEXT("HPRatio : %f"), CurrentCharacterStat->GetHPRatio());
+	//	}
 
-		});
+	//	});
 }
 
 void UABCharacterWidget::NativeConstruct()
