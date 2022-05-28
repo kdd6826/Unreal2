@@ -15,6 +15,7 @@ public:
 	// Sets default values for this actor's properties
 	AABSection();
 
+	virtual void OnConstruction(const FTransform& Transform) override;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -34,6 +35,14 @@ private:
 	ESectionState CurrentState = ESectionState::READY;
 
 	void OperateGates(bool bOpen = true);
+
+	UFUNCTION()
+		void OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+		void OnGateTriggerBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 private:
 	UPROPERTY(VisibleAnywhere, Category = Mesh, Meta = (AllowPrivateAccess = true))
 	TArray<UStaticMeshComponent*> GateMeshes;

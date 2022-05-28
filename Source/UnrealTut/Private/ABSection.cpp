@@ -28,6 +28,7 @@ AABSection::AABSection()
 	Trigger->SetupAttachment(RootComponent);
 	Trigger->SetRelativeLocation(FVector(0.f, 0.f, 250.f));
 	Trigger->SetCollisionProfileName(TEXT("ABTrigger"));
+	Trigger->OnComponentBeginOverlap.AddDynamic(this, &AABSection::OnTriggerBeginOverlap);
 
 	FString GateAssetPath = TEXT("/Game/Book/StaticMesh/SM_GATE.SM_GATE");
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM_GATE(*GateAssetPath);
@@ -43,7 +44,7 @@ AABSection::AABSection()
 		UStaticMeshComponent* NewGate = CreateDefaultSubobject<UStaticMeshComponent>(*GateSocket.ToString());
 		NewGate->SetStaticMesh(SM_GATE.Object);
 		NewGate->SetupAttachment(RootComponent, GateSocket);
-		NewGate->SetRelativeLocation(FVector(0.f, -80.5f, 0.f));
+
 		GateMeshes.Add(NewGate);
 		
 		UBoxComponent* NewGateTrigger = CreateDefaultSubobject<UBoxComponent>(*GateSocket.ToString().Append(TEXT("Trigger")));
@@ -52,9 +53,18 @@ AABSection::AABSection()
 		NewGateTrigger->SetRelativeLocation(FVector(70.f, 0.f, 250.f));
 		NewGateTrigger->SetCollisionProfileName(TEXT("ABTrigger"));
 		GateTriggers.Add(NewGateTrigger);
+
+		NewGateTrigger->OnComponentBeginOverlap.AddDynamic(this, &AABSection::OnGateTriggerBeginOverlap);
+		NewGateTrigger->ComponentTags.Add(GateSocket);
 	}
 
 	bNoBattle = false;
+}
+
+void AABSection::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+	SetState(bNoBattle ? ESectionState::COMPLETE : ESectionState::READY);
 }
 
 // Called when the game starts or when spawned
@@ -122,6 +132,45 @@ void AABSection::OperateGates(bool bOpen)
 	for (UStaticMeshComponent* Gate : GateMeshes)
 	{
 		Gate->SetRelativeRotation(bOpen ? FRotator(0.f, -90.f, 0.f) : FRotator::ZeroRotator);
+	}
+}
+
+void AABSection::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (CurrentState == ESectionState::READY)
+	{
+		SetState(ESectionState::BATTLE);
+	}
+}
+
+void AABSection::OnGateTriggerBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	ABCHECK(OverlappedComponent->ComponentTags.Num() == 1);
+	FName ComponentTag = OverlappedComponent->ComponentTags[0];
+	FName SocketName = FName(*ComponentTag.ToString().Left(2));
+	if (!Mesh->DoesSocketExist(SocketName))
+		return;
+	FVector NewLocation = Mesh->GetSocketLocation(SocketName);
+	
+	TArray<FOverlapResult> OverlapResults;
+	FCollisionQueryParams CollisionQueryParam(NAME_None, false, this);
+	FCollisionObjectQueryParams ObjectQueryParam(FCollisionObjectQueryParams::InitType::AllObjects);
+	bool bResult = GetWorld()->OverlapMultiByObjectType(
+		OverlapResults,
+		NewLocation,
+		FQuat::Identity,
+		ObjectQueryParam,
+		FCollisionShape::MakeSphere(775.f),
+		CollisionQueryParam
+	);
+
+	if (!bResult)
+	{
+		auto NewSection = GetWorld()->SpawnActor<AABSection>(NewLocation, FRotator::ZeroRotator);
+	}
+	else
+	{
+		ABLOG(Warning, TEXT("New section area is not empty."));
 	}
 }
 
