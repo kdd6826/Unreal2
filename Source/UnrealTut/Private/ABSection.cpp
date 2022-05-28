@@ -75,12 +75,6 @@ void AABSection::BeginPlay()
 	SetState(bNoBattle ? ESectionState::COMPLETE : ESectionState::READY);
 }
 
-// Called every frame
-void AABSection::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 
 void AABSection::SetState(ESectionState NewState)
 {
