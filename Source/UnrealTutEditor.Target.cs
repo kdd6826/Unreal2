@@ -10,6 +10,6 @@ public class UnrealTutEditorTarget : TargetRules
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 
-		ExtraModuleNames.AddRange( new string[] { "UnrealTut" } );
+		ExtraModuleNames.AddRange( new string[] { "UnrealTut","UnrealTutSetting" } );
 	}
 }
