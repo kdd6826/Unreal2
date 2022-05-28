@@ -5,13 +5,19 @@
 	"Description": "",
 	"Modules": [
 		{
+			"Name": "UnrealTutSetting",
+			"Type": "Runtime",
+			"LoadingPhase": "PreDefault"
+		},
+		{
 			"Name": "UnrealTut",
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
 				"Engine",
 				"UMG",
-				"AIModule"
+				"AIModule",
+				"UnrealTutSetting"
 			]
 		}
 	]
