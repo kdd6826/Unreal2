@@ -87,6 +87,7 @@ private:
 	void AttackStartComboState();
 	void AttackEndComboState();
 	void AttackCheck();
+	
 	void OnAssetLoadCompleted();
 
 private:

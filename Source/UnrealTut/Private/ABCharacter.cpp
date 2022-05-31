@@ -84,21 +84,12 @@ AABCharacter::AABCharacter()
 
 	AIControllerClass = AABAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
-
-	//auto DefaultSetting = GetDefault<UABCharacterSetting>();
-	//if (DefaultSetting->CharacterAssets.Num() > 0)
-	//{
-	//	for (auto CharacterAsset : DefaultSetting->CharacterAssets)
-	//	{
-	//		ABLOG(Warning, TEXT("Character Asset : %s"), *CharacterAsset.ToString());
-	//	}
-	//}
 }
 
 // Called when the game starts or when spawned
 void AABCharacter::BeginPlay()
 {
-	Super::BeginPlay();
+		Super::BeginPlay();
 	
 	if (!IsPlayerControlled())
 	{
@@ -112,20 +103,12 @@ void AABCharacter::BeginPlay()
 			AssetStreamingHandle = ABGameInstance->StreamableManager.RequestAsyncLoad(CharacterAssetToLoad, FStreamableDelegate::CreateUObject(this, &AABCharacter::OnAssetLoadCompleted));
 		}
 	}
-	// weapon 
-
-	/*FName WeaponSocket(TEXT("hand_rSocket"));
-	auto CurWeapon = GetWorld()->SpawnActor<AABWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
-	if (nullptr != CurWeapon)
-	{
-		CurWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocket);
-	}
 
 	auto CharacterWidget = Cast<UABCharacterWidget>(HPBarWidget->GetUserWidgetObject());
 	if (nullptr != CharacterWidget)
 	{
 		CharacterWidget->BindCharacterStat(CharacterStat);
-	}*/
+	}
 }
 
 void AABCharacter::SetControlMode(EControlMode NewControlMode)
@@ -504,5 +487,11 @@ void AABCharacter::OnAssetLoadCompleted()
 	{
 		GetMesh()->SetSkeletalMesh(LoadedAssetPath.Get());
 	}
+	//USkeletalMesh* AssetLoaded = Cast<USkeletalMesh>(AssetStreamingHandle->GetLoadedAsset());
+	//AssetStreamingHandle.Reset();
+	//if (nullptr != AssetLoaded)
+	//{
+	//	GetMesh()->SetSkeletalMesh(AssetLoaded);
+	//}
 }
 
